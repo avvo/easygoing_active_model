@@ -1,8 +1,42 @@
 # EasygoingActiveModel
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/easygoing_active_model`. To experiment with that code, run `bin/console` for an interactive prompt.
+ActiveModel::Model will raise an error if you try to pass in a value that it does not have a setter for.  This version of it just skips over such params.
 
-TODO: Delete this and the text above, and describe your gem
+For example, imagine the following client class, used in association with any API:
+
+```ruby
+class ClientClass
+    include ActiveModel::Model
+
+    attr_accessor :my_variable_1
+    attr_accessor :my_variable_2
+
+end
+```
+
+Some controller might have this:
+
+```ruby
+
+ClientClass.new(params)
+
+```
+
+Or some parent class might do a similar thing:
+
+```ruby
+
+class ClientClassParent
+
+    def initialize(params = {})
+        @child_class = ClientClass.new(params[:child_class])
+    end
+
+end
+
+```
+
+Either way, it is possible the hash being passed in to instantiate ClientClass has some parameter other than :my_variable_1 or :my_variable_2.  If it does, we'll get an exception.
 
 ## Installation
 
@@ -22,7 +56,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Just include EasygoingActiveModel::Model instead of ActiveModel::Model.
+
+```ruby
+class ClientClass
+    include EasygoingActiveModel::Model
+
+    attr_accessor :my_variable_1
+    attr_accessor :my_variable_2
+
+end
+```
 
 ## Development
 
@@ -32,5 +76,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/easygoing_active_model.
+Bug reports and pull requests are welcome on GitHub at https://github.com/avvo/easygoing_active_model.
 
